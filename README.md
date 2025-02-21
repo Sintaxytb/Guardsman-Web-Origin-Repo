@@ -33,6 +33,7 @@ Install NPM dependencies with your package manager of choice (npm install, pnpm 
 Run:
 
 php artisan key:generate
+
 Crontab Configuration
 In order for things such as auto-punishment expiry, data backups, and other miscellaneous functions like statistics to run, we need to create a crontab entry that will run the scheduled tasks every minute. If you want to run the crontab at different intervals, see Crontab Guru
 
