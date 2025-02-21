@@ -1,0 +1,1568 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Guardsman API",
+    "description": "This is the full documentation of the Guardsman web API.",
+    "termsOfService": "https://guardsman.bunkerbravointeractive.com/terms-of-service",
+    "contact": {
+      "email": "sky@bunkerbravointeractive.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "https://guardsman.bunkerbravointeractive.com/api/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Open API",
+      "description": "Open API Endpoints for registered users"
+    },
+    {
+      "name": "User",
+      "description": "Operations about user"
+    },
+    {
+      "name": "Discord",
+      "description": "API Endpoints for the Guardsman Discord Integration"
+    },
+    {
+      "name": "Game",
+      "description": "API Endpoints for the Guardsman In-game Integration"
+    }
+  ],
+  "paths": {
+    "/users/{identifier}": {
+      "get": {
+        "tags": [
+          "Open API"
+        ],
+        "summary": "Returns a user based on the provided query",
+        "operationId": "openGetUser",
+        "security": [
+          {
+            "openapi_auth_userid": []
+          },
+          {
+            "openapi_auth_key": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "The user identifier to query for (Username, Roblox Id, Discord Id)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The API key does not have the required scope for the endpoint",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOSCOPE"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The API Key or User ID were mismatched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOAUTH"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Returns the logged in user",
+        "operationId": "user",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The user is logged out",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthenticated."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login/guardsman": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs user into guardsman",
+        "operationId": "login",
+        "requestBody": {
+          "description": "User object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "imskyyc"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "incorrect credentials are entered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOCREDS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/login/roblox": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs in the user based on a ROBLOX OAuth2 grant",
+        "operationId": "loginRoblox",
+        "responses": {
+          "301": {
+            "description": "Redirects the user to the Guardsman Login Page with a status message"
+          }
+        }
+      }
+    },
+    "/user/login/discord": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs in the user based on a Discord OAuth2 grant",
+        "operationId": "loginDiscord",
+        "responses": {
+          "301": {
+            "description": "Redirects the user to the Guardsman Login Page with a status message"
+          }
+        }
+      }
+    },
+    "/user/create-password": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Creates a password for the user if one doesn't exist",
+        "operationId": "createPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/change-password": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Changes the password of the user",
+        "operationId": "changePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "current_password": {
+                    "type": "string"
+                  },
+                  "new_password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Logs the user out",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/{job_id}": {
+      "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Creates a new Guardsman Tracked Server Instance",
+        "operationId": "createGame",
+        "security": [
+          {
+            "roblox_server_master_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "description": "The job ID of the ROBLOX Server",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Roblox Server info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RobloxServerInfo"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "I#RHG#IPRUGP#IH#PRUIH@{(H@}{}{@E}@{#!@!##RGIU#H$IGUH@FUWHFKWJKDNWKDN$%%%NF"
+                    },
+                    "roles": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Role"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Updates the server data",
+        "operationId": "serverUpdateData",
+        "security": [
+          {
+            "roblox_server_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "description": "The job ID of the ROBLOX Server",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOSERVER"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The server token submitted does not match the stored token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "EBADTOKEN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Removes the Guardsman Tracked Server Instance",
+        "operationId": "serverRemoveData",
+        "security": [
+          {
+            "roblox_server_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "description": "The job ID of the ROBLOX Server",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOSERVER"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The server token submitted does not match the stored token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "EBADTOKEN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/{job_id}/player/{identifier}": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Gets a player connected to the server",
+        "operationId": "serverGetPlayer",
+        "security": [
+          {
+            "roblox_server_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "description": "The job ID of the ROBLOX Server",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "identifier",
+            "description": "The user identifier to query for (Username, Roblox Id, Discord Id)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOSERVER"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The master API key provided was incorrect",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "EBADTOKEN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/game/{job_id}/player/{userId}/{accountName}/{hash}": {
+      "post": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "Posts a user fingerprint to the hash database",
+        "operationId": "serverSaveFingerprint",
+        "security": [
+          {
+            "roblox_server_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "job_id",
+            "description": "The job ID of the ROBLOX Server",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "The user ID of the associated fingerprint",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "accountName",
+            "description": "The username of the associated fingerprint",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "hash",
+            "description": "The user's hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The server does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOSERVER"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The server token submitted does not match the stored token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "EBADTOKEN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/bot/startup": {
+      "post": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Creates a new Guardsman Tracked Client Instance",
+        "operationId": "createDiscordInstance",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "requestBody": {
+          "description": "The connecting client ID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "client_guid": {
+                      "type": "string",
+                      "example": "FA213BF"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The Guardsman Discord API Token is incorrect",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNoAuth"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/bot/checkin": {
+      "patch": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Updates the provided Guardsman Tracked Client Instance",
+        "operationId": "updateDiscordInstance",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "requestBody": {
+          "description": "The connecting client ID",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "client_guid": {
+                    "type": "string"
+                  },
+                  "client_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "The Guardsman Discord API Token is incorrect",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorNoAuth"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/search/{query}": {
+      "get": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Returns a result set of users like the query",
+        "operationId": "discordSearch",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "query",
+            "description": "The user identifier to query for (Username, Roblox Id, Discord Id)",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordSearchResults"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/user/by-username/{username}": {
+      "get": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Returns a user based on the provided username",
+        "operationId": "discordSearchUsername",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "username",
+            "description": "The username to query for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOUSER"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/user/by-discord/{id}": {
+      "get": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Returns a user based on the provided discord snowflake",
+        "operationId": "discordSearchSnowflake",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The Discord Snowflake (User Id) of the associated Discord User",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOUSER"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/user/{id}": {
+      "get": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Returns a user based on the provided Guardsman ID",
+        "operationId": "discordSearchGuardsman",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The Guardsman ID of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOUSER"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/user/{id}/punishment": {
+      "post": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Issues a punishment on a user",
+        "operationId": "discordPunishUser",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The Guardsman ID of the user",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "Global Ban"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "example": "Rule #1 Violation"
+                  },
+                  "expires": {
+                    "type": "string",
+                    "example": "1702774576"
+                  },
+                  "moderator": {
+                    "type": "string",
+                    "example": "1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "id": {
+                      "type": "string",
+                      "example": "F34G1D"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The user does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOTFOUND"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discord/{guildId}/settings": {
+      "get": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Gets the guilds settings",
+        "operationId": "discordGetSettings",
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "guildId",
+            "description": "ID of the guild",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "guild_id": {
+                      "type": "string",
+                      "example": "1234567890"
+                    },
+                    "settings": {
+                      "type": "string",
+                      "example": "{}"
+                    },
+                    "moderator_roles": {
+                      "type": "string",
+                      "example": "{}"
+                    },
+                    "muterole": {
+                      "type": "string",
+                      "example": "1234567890"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "example": "2023-12-10 20:33:28"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "example": "2023-12-10 20:33:28"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The guild does not exist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "ENOGUILD"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Discord"
+        ],
+        "summary": "Updates the guilds settings",
+        "operationId": "discordPutSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "guild_id": {
+                    "type": "string",
+                    "example": "1234567890"
+                  },
+                  "settings": {
+                    "type": "string",
+                    "example": "{}"
+                  },
+                  "moderator_roles": {
+                    "type": "string",
+                    "example": "{}"
+                  },
+                  "muterole": {
+                    "type": "string",
+                    "example": "1234567890"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "discord_auth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "guildId",
+            "description": "ID of the guild",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "username": {
+            "type": "string",
+            "example": "imskyyc"
+          },
+          "roblox_id": {
+            "type": "string",
+            "example": 62097945
+          },
+          "discord_id": {
+            "type": "string",
+            "example": 1186379133433954300
+          },
+          "roles": {
+            "type": "array",
+            "items": {},
+            "example": [
+              "Guardsman Administrator",
+              "Player"
+            ]
+          },
+          "punishments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Punishment"
+            }
+          },
+          "game_data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GameData"
+            }
+          },
+          "permissions": {
+            "type": "array",
+            "items": {}
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2023-12-10 20:33:28"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2023-12-10 20:33:28"
+          }
+        },
+        "xml": {
+          "name": "user"
+        }
+      },
+      "Role": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "Guardsman Administrator"
+          },
+          "position": {
+            "type": "number",
+            "example": 10
+          },
+          "permissions": {
+            "type": "array",
+            "items": {}
+          }
+        }
+      },
+      "GameData": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "number",
+            "example": 1
+          },
+          "game_name": {
+            "type": "string",
+            "example": "Tunnels - A Bunker Bravo Original"
+          },
+          "game_data": {
+            "type": "string",
+            "example": "{\"cash\": 0}"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2023-12-10 20:33:28"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2023-12-10 20:33:28"
+          }
+        }
+      },
+      "Punishment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "3B78EA6B"
+          },
+          "moderator": {
+            "type": "string",
+            "example": "imskyyc"
+          },
+          "user": {
+            "type": "string",
+            "example": "imskyyc"
+          },
+          "action": {
+            "type": "string",
+            "example": "Global Ban"
+          },
+          "reason": {
+            "type": "string",
+            "example": "Rule #1 Violation"
+          },
+          "active": {
+            "type": "number",
+            "example": 0
+          },
+          "expires": {
+            "type": "string",
+            "example": "1700685300"
+          }
+        }
+      },
+      "RobloxServerInfo": {
+        "type": "object",
+        "properties": {
+          "isVip": {
+            "type": "boolean",
+            "example": true
+          },
+          "gameName": {
+            "type": "string",
+            "example": "Tunnels - A Bunker Bravo Original"
+          },
+          "placeId": {
+            "type": "string",
+            "example": "1113985744"
+          }
+        }
+      },
+      "ErrorNoAuth": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "message": {
+            "type": "string",
+            "example": "ENOAUTH"
+          }
+        }
+      },
+      "ApiResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "xml": {
+          "name": "##default"
+        }
+      },
+      "DiscordSearchResult": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "imskyyc"
+          },
+          "value": {
+            "type": "string",
+            "example": "imskyyc"
+          }
+        }
+      },
+      "DiscordSearchResults": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/DiscordSearchResult"
+        }
+      }
+    },
+    "securitySchemes": {
+      "openapi_auth_userid": {
+        "type": "apiKey",
+        "name": "X-GUARDSMAN-USER-ID",
+        "in": "header"
+      },
+      "openapi_auth_key": {
+        "type": "apiKey",
+        "name": "X-GUARDSMAN-API-KEY",
+        "in": "header"
+      },
+      "discord_auth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      },
+      "roblox_server_auth": {
+        "type": "apiKey",
+        "name": "X-GUARDSMAN-SERVER-TOKEN",
+        "in": "header"
+      },
+      "roblox_server_master_auth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  }
+}
