@@ -1,0 +1,11 @@
+image: node:latest
+
+stages:
+  - build
+
+compile:
+  stage: build
+  script:
+    - npm ci
+    - cp .env.example .env
+    - npm run build
