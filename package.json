@@ -29,7 +29,7 @@
         "@vueuse/core": "^10.5.0",
         "@vueuse/math": "^10.5.0",
         "apexcharts-clevision": "^3.28.5",
-        "axios": "^1.6.7",
+        "axios": "^1.7.4",
         "chart.js": "^4.4.0",
         "cookie-es": "^1.0.0",
         "is-electron": "^2.2.2",
