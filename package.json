@@ -93,7 +93,7 @@
         "eslint-plugin-unicorn": "^48.0.1",
         "eslint-plugin-vue": "^9.17.0",
         "laravel-vite-plugin": "^0.8.0",
-        "msw": "^1.3.2",
+        "msw": "^2.7.3",
         "postcss-html": "^1.5.0",
         "postcss-scss": "^4.0.9",
         "sass": "^1.69.4",
