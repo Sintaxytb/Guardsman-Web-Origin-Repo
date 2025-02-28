@@ -60,8 +60,13 @@ To install Guardsman Web on your system, follow these steps:
 
 1. Clone the Guardsman Web repository:
    ```bash
-   git clone https://git.bunkerbravointeractive.com/bunker-bravo-interactive/guardsman-web.git -C /opt/guardsman-web
+   git clone https://git.bunkerbravointeractive.com/bunker-bravo-interactive/guardsman-web.git
    ```
+
+1.2 Go in the cloned repo.
+```bash
+cd guardsman-web
+```
 
 2. Install Composer dependencies:
    ```bash
