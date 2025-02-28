@@ -1,57 +1,143 @@
+
+
+# Guardsman Web
+
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
-Installation
-Last edited by Jaiden 10 months ago
-Installation
-Thank you Pterodactyl Project for in-depth installation instructions utilized here.
+**Guardsman Web** is a web-based administration panel designed for managing and automating tasks such as auto-punishment expiry, data backups, and statistics. This project is no longer actively maintained, so use it at your own risk.
 
-Dependency installation
-Guardsman Web requires some system dependencies and programs in order to function. These instructions assume you use the Ubuntu operating system.
+---
 
-# Add "add-apt-repository" command
-apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
+## Installation
 
-# Add additional repositories for PHP, Redis, and MariaDB
-LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+Last edited by **Jaiden** 10 months ago.
 
-# Update repositories list
-apt update
+Special thanks to the **Pterodactyl Project** for their in-depth installation instructions, which were utilized in this guide.
 
-# Install Dependencies
+---
 
-apt -y install php8.3 php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
+### ⚠️ **Important Notes Before Installation**
+- This project is **no longer maintained**. Use it at your own risk.
+- Ensure you are using **Ubuntu** as the operating system. Other distributions may require adjustments to the installation steps.
+- You must have **administrative privileges** (sudo access) to complete the installation.
 
-# Composer
-Composer is a php package / dependency manager that Guardsman utilizes for its backend. To install it, run: 
+---
 
-curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+### Dependency Installation
 
-Project installation
+Guardsman Web requires several system dependencies and programs to function properly. Follow the steps below to install them:
+
+1. Install the `software-properties-common` package to add the `add-apt-repository` command:
+   ```bash
+   apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
+   ```
+
+2. Add additional repositories for PHP, Redis, and MariaDB:
+   ```bash
+   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+   ```
+
+3. Update the repositories list:
+   ```bash
+   apt update
+   ```
+
+4. Install the required dependencies:
+   ```bash
+   apt -y install php8.3 php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
+   ```
+
+5. Install **Composer**, a PHP package/dependency manager:
+   ```bash
+   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+   ```
+
+---
+
+### Project Installation
+
 To install Guardsman Web on your system, follow these steps:
 
-Clone the Guardsman Web repository. (ex: git clone https://git.bunkerbravointeractive.com/bunker-bravo-interactive/guardsman-web.git -C /opt/guardsman-web)
-Install composer dependencies via composer install.
-Install NPM dependencies with your package manager of choice (npm install, pnpm install, yarn install)
-Run:
+1. Clone the Guardsman Web repository:
+   ```bash
+   git clone https://git.bunkerbravointeractive.com/bunker-bravo-interactive/guardsman-web.git -C /opt/guardsman-web
+   ```
 
-php artisan key:generate
+2. Install Composer dependencies:
+   ```bash
+   composer install
+   ```
 
-Crontab Configuration
-In order for things such as auto-punishment expiry, data backups, and other miscellaneous functions like statistics to run, we need to create a crontab entry that will run the scheduled tasks every minute. If you want to run the crontab at different intervals, see Crontab Guru
+3. Install NPM dependencies using your preferred package manager:
+   ```bash
+   npm install
+   # OR
+   pnpm install
+   # OR
+   yarn install
+   ```
 
-Open the crontab using 
+4. Generate an application key:
+   ```bash
+   php artisan key:generate
+   ```
 
-sudo crontab -e, if it prompts you for an editor, the easiest to use is GNU nano.
+---
 
-Add the following entry to the bottom of the file. 
+### Crontab Configuration
 
-* * * * * php /opt/guardsman-web/artisan schedule:run >> /dev/null 2>&1
+To enable automated tasks such as auto-punishment expiry, data backups, and statistics, you need to set up a crontab entry that runs the scheduled tasks every minute.
 
-Configuration
-Begin by copying .env.example to .env (cp .env.example .env). Change all values you may want to use. Guardsman Web REQUIRES a working MySQL or MariaDB installation.
+1. Open the crontab editor:
+   ```bash
+   sudo crontab -e
+   ```
+   If prompted, select an editor (e.g., GNU nano).
 
-After configuring DB_ Values, run php artisan migrate.
+2. Add the following entry to the bottom of the file:
+   ```bash
+   * * * * * php /opt/guardsman-web/artisan schedule:run >> /dev/null 2>&1
+   ```
 
-Post-installation
-After installation of the panel, you'll need to create a user on the panel that has "super admin" privileges. To do so, you can utilize php artisan g:user:make. This command will prompt you for the user's information and will create an account for them.
+   > **Note**: To customize the interval, use [Crontab Guru](https://crontab.guru/).
 
+---
+
+### Configuration
+
+1. Copy the `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file to configure your environment variables. **Guardsman Web requires a working MySQL or MariaDB installation.**
+
+3. After configuring the `DB_*` values, run the database migrations:
+   ```bash
+   php artisan migrate
+   ```
+
+---
+
+### Post-Installation
+
+After completing the installation, you need to create a user with **super admin** privileges:
+
+1. Run the following command:
+   ```bash
+   php artisan g:user:make
+   ```
+
+2. Follow the prompts to enter the user's information.
+
+---
+
+### ⚠️ **Warnings**
+- **No Maintenance**: This project is no longer actively maintained. Bugs and security issues will not be addressed. (Dependecies will still be updated)
+- **Database Backups**: Regularly back up your database to prevent data loss.
+- **Security**: Ensure your server is properly secured, especially if exposed to the internet.
+
+---
+
+### License
+This project is provided as-is without any warranty. Use it at your own risk.
