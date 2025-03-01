@@ -17,7 +17,7 @@ Special thanks to the **Pterodactyl Project** for their in-depth installation in
 ---
 
 > [!WARNING]
-> The release of Guardsman V2 has made this Guardsman Project **deprecated**, and updates have ceased.
+> The release of Guardsman V2 has made this Guardsman Project **deprecated**, and updates have **ceased**.
 > 
 > This is just a "fork" of the repo, as the "normal" one has been privatised.
 > 
