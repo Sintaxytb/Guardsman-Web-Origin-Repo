@@ -16,10 +16,14 @@ Special thanks to the **Pterodactyl Project** for their in-depth installation in
 
 ---
 
-### ⚠️ **Important Notes Before Installation**
-- This project is **no longer maintained**. Use it at your own risk.
-- Ensure you are using **Ubuntu** as the operating system. Other distributions may require adjustments to the installation steps.
-- You must have **administrative privileges** (sudo access) to complete the installation.
+> [!WARNING]
+> The release of Guardsman V2 has made this Guardsman Project **deprecated**, and updates have ceased.
+> 
+> This is just a "fork" of the repo, as the "normal" one has been privatised.
+> 
+> Thank you for your support to Guardsman
+>
+> THIS REPO AND ALL THE CONTENTS INSIDE OF IT ARE OWNED BY BUNKER BRAVO LLC.
 
 ---
 
