@@ -1,6 +1,53 @@
+# .github/dependabot.yml
 version: 2
 updates:
-  - package-ecosystem: "npm, bundler, composer, devcontainers, dotnet-sdk, maven, mix, cargo, gradle, nuget, gomod, docker, docker-compose, elm, gitsubmodule, github-actions, pip, terraform, pub, swift, bun" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: "weekly"
+      interval: "daily"
+
+  # Maintain dependencies for npm
+  - package-ecosystem: "npm"
+    directory: "/sintaxytb-guardsman-web-origin-repo/" # Path to your package.json
+    schedule:
+      interval: "daily"
+    # Add some useful defaults.  These are not strictly required, but
+    # are good starting points.
+    groups:
+      dependencies:
+        patterns:
+          - "*"  # Group all dependencies
+    commit-message:
+      prefix: "fix(deps):" # Prefix commit messages with "fix(deps):"
+      include: "scope" # Add the dependency name to the commit message.
+    reviewers:
+      - "Sintaxytb"  
+    open-pull-requests-limit: 10 
+
+  # Maintain dependencies for Composer (PHP)
+  - package-ecosystem: "composer"
+    directory: "/sintaxytb-guardsman-web-origin-repo/"  # Path to composer.json
+    schedule:
+      interval: "daily"
+    groups:
+      dependencies:
+        patterns:
+          - "*"
+    commit-message:
+      prefix: "fix(deps):"
+      include: "scope"
+    reviewers:
+      - "Sintaxytb"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for Docker
+  - package-ecosystem: "docker"
+    directory: "/sintaxytb-guardsman-web-origin-repo/" # Path to your docker-compose.yml, if it's not at the root
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "fix(deps):"
+      include: "scope"
+    reviewers:
+      - "Sintaxytb"
