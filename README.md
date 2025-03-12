@@ -33,27 +33,27 @@ Guardsman Web requires several system dependencies and programs to function prop
 
 1. Install the `software-properties-common` package to add the `add-apt-repository` command:
    ```bash
-   apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
+   sudo apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
    ```
 
 2. Add additional repositories for PHP, Redis, and MariaDB:
    ```bash
-   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+   sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
    ```
 
 3. Update the repositories list:
    ```bash
-   apt update
+   sudo apt update && sudo apt upgrade -y
    ```
 
 4. Install the required dependencies:
    ```bash
-   apt -y install php8.3 php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
+   sudo apt -y install php8.3 php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
    ```
 
 5. Install **Composer**, a PHP package/dependency manager:
    ```bash
-   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+   sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
    ```
 
 ---
@@ -67,28 +67,24 @@ To install Guardsman Web on your system, follow these steps:
    git clone https://github.com/Sintaxytb/Guardsman-Web-Origin-Repo
    ```
 
-1.2 Go in the cloned repo.
+ 1.2 Go in the cloned repo.
 ```bash
 cd guardsman-web
 ```
 
-2. Install Composer dependencies:
+ 2. Install Composer dependencies:
    ```bash
-   composer install
+ sudo composer install
    ```
 
 3. Install NPM dependencies using your preferred package manager:
    ```bash
-   npm install
-   # OR
-   pnpm install
-   # OR
-   yarn install
+   sudo npm install
    ```
 
 4. Generate an application key:
    ```bash
-   php artisan key:generate
+   sudo php artisan key:generate
    ```
 
 ---
@@ -123,7 +119,7 @@ To enable automated tasks such as auto-punishment expiry, data backups, and stat
 
 3. After configuring the `DB_*` values, run the database migrations:
    ```bash
-   php artisan migrate
+   sudo php artisan migrate
    ```
 
 ---
@@ -131,13 +127,18 @@ To enable automated tasks such as auto-punishment expiry, data backups, and stat
 ### Post-Installation
 
 After completing the installation, you need to create a user with **super admin** privileges:
-
 1. Run the following command:
    ```bash
-   php artisan g:user:make
+   sudo php artisan g:role:make
    ```
 
-2. Follow the prompts to enter the user's information.
+
+2. Run the following command:
+   ```bash
+   sudo php artisan g:user:make
+   ```
+
+3. Follow the prompts to enter the user's information.
 
 ---
 
