@@ -16,10 +16,14 @@ Special thanks to the **Pterodactyl Project** for their in-depth installation in
 
 ---
 
-### ⚠️ **Important Notes Before Installation**
-- This project is **no longer maintained**. Use it at your own risk.
-- Ensure you are using **Ubuntu** as the operating system. Other distributions may require adjustments to the installation steps.
-- You must have **administrative privileges** (sudo access) to complete the installation.
+> [!WARNING]
+> The release of Guardsman V2 has made this Guardsman Project **deprecated**, and updates have **ceased**.
+> 
+> This is just a "fork" of the repo, as the "normal" one has been privatised.
+> 
+> Thank you for your support to Guardsman
+>
+> THIS REPO AND ALL THE CONTENTS INSIDE OF IT ARE OWNED BY BUNKER BRAVO LLC.
 
 ---
 
@@ -29,27 +33,27 @@ Guardsman Web requires several system dependencies and programs to function prop
 
 1. Install the `software-properties-common` package to add the `add-apt-repository` command:
    ```bash
-   apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
+   sudo apt -y install software-properties-common curl apt-transport-https ca-certificates gnupg
    ```
 
 2. Add additional repositories for PHP, Redis, and MariaDB:
    ```bash
-   LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
+   sudo LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php
    ```
 
 3. Update the repositories list:
    ```bash
-   apt update
+   sudo apt update && sudo apt upgrade -y
    ```
 
 4. Install the required dependencies:
    ```bash
-   apt -y install php8.3 php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
+   sudo apt -y install php8.3 php8.3-{common,cli,gd,mysql,mbstring,bcmath,xml,fpm,curl,zip} mariadb-server nginx tar unzip git
    ```
 
 5. Install **Composer**, a PHP package/dependency manager:
    ```bash
-   curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+   sudo curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
    ```
 
 ---
@@ -60,31 +64,27 @@ To install Guardsman Web on your system, follow these steps:
 
 1. Clone the Guardsman Web repository:
    ```bash
-   git clone https://git.bunkerbravointeractive.com/bunker-bravo-interactive/guardsman-web.git
+   git clone https://github.com/Sintaxytb/Guardsman-Web-Origin-Repo
    ```
 
-1.2 Go in the cloned repo.
+ 1.2 Go in the cloned repo.
 ```bash
 cd guardsman-web
 ```
 
-2. Install Composer dependencies:
+ 2. Install Composer dependencies:
    ```bash
-   composer install
+ sudo composer install
    ```
 
 3. Install NPM dependencies using your preferred package manager:
    ```bash
-   npm install
-   # OR
-   pnpm install
-   # OR
-   yarn install
+   sudo npm install
    ```
 
 4. Generate an application key:
    ```bash
-   php artisan key:generate
+   sudo php artisan key:generate
    ```
 
 ---
@@ -119,21 +119,155 @@ To enable automated tasks such as auto-punishment expiry, data backups, and stat
 
 3. After configuring the `DB_*` values, run the database migrations:
    ```bash
-   php artisan migrate
+   sudo php artisan migrate
    ```
 
 ---
+### Web-Server install:
+
+Without SSL:
+
+````bash
+server {
+    # Replace the example <domain> with your domain name or IP address
+    listen 80;
+    server_name <domain>;
+
+
+    root /opt/guardsman-web/public;
+    index index.html index.htm index.php;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+        expires 1y;
+        add_header Cache-Control "public, no-transform";
+        add_header Accept-Encoding "gzip, compress, br";
+    }
+
+    location = /favicon.ico { access_log off; log_not_found off; }
+    location = /robots.txt  { access_log off; log_not_found off; }
+
+    access_log off;
+    error_log  /var/log/nginx/guardsman.log error;
+
+    location /api/* {
+        expires -1;
+        add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    }
+
+    location /openapi.json {
+        expires -1;
+        add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    }
+
+    location /statistics.json {
+        expires -1;
+        add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+    }
+
+    #GZIP
+    # Enable gzip compression.
+    gzip on;
+
+    # Compression level (1-9).
+    # 5 is a perfect compromise between size and CPU usage, offering about
+    # 75% reduction for most ASCII files (almost identical to level 9).
+    gzip_comp_level    5;
+
+    # Don't compress anything that's already small and unlikely to shrink much
+    # if at all (the default is 20 bytes, which is bad as that usually leads to
+    # larger files after gzipping).
+    gzip_min_length    256;
+
+    # Compress data even for clients that are connecting to us via proxies,
+    # identified by the "Via" header (required for CloudFront).
+    gzip_proxied       any;
+
+    # Tell proxies to cache both the gzipped and regular version of a resource
+    # whenever the client's Accept-Encoding capabilities header varies;
+    # Avoids the issue where a non-gzip capable client (which is extremely rare
+    # today) would display gibberish if their proxy gave them the gzipped version.
+    gzip_vary          on;
+
+    # Compress all output labeled with one of the following MIME-types.
+    gzip_types
+      application/atom+xml
+      application/javascript
+      application/json
+      application/ld+json
+      application/manifest+json
+      application/rss+xml
+      application/vnd.geo+json
+      application/vnd.ms-fontobject
+      application/x-font-ttf
+      application/x-web-app-manifest+json
+      application/xhtml+xml
+      application/xml
+      font/opentype
+      image/bmp
+      image/svg+xml
+      image/x-icon
+      text/cache-manifest
+      text/css
+      text/plain
+      text/vcard
+      text/vnd.rim.location.xloc
+      text/vtt
+      text/x-component
+      text/x-cross-domain-policy;
+    # text/html is always compressed by gzip module
+
+    # allow larger file uploads and longer script runtimes
+    client_max_body_size 100m;
+    client_body_timeout 120s;
+
+    sendfile off;
+
+    location /api/docs {
+        proxy_pass http://127.0.0.1:9001;
+    }
+
+    location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param PHP_VALUE "upload_max_filesize = 100M \n post_max_size=100M";
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param HTTP_PROXY "";
+        fastcgi_intercept_errors off;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+        fastcgi_connect_timeout 300;
+        fastcgi_send_timeout 300;
+        fastcgi_read_timeout 300;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+````
+
+---
+
 
 ### Post-Installation
 
 After completing the installation, you need to create a user with **super admin** privileges:
-
 1. Run the following command:
    ```bash
-   php artisan g:user:make
+   sudo php artisan g:role:make
    ```
 
-2. Follow the prompts to enter the user's information.
+
+2. Run the following command:
+   ```bash
+   sudo php artisan g:user:make
+   ```
+
+3. Follow the prompts to enter the user's information.
 
 ---
 
