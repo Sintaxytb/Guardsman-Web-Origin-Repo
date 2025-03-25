@@ -3,6 +3,7 @@
 # Guardsman Web
 
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+[![img](https://img.shields.io/badge/We%20support-BlueHats-blue.svg)](https://bluehats.global)
 
 **Guardsman Web** is a web-based administration panel designed for managing and automating tasks such as auto-punishment expiry, data backups, and statistics. This project is no longer actively maintained, so use it at your own risk.
 
