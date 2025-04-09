@@ -80,7 +80,7 @@ cd guardsman-web
 
 3. Install NPM dependencies using your preferred package manager:
    ```bash
-   sudo npm install
+   sudo npm install --legacy-peer-deps #For npm install to not have conflict dependecies, due to an update
    ```
 
 4. Generate an application key:
