@@ -277,7 +277,7 @@ After completing the installation, you need to create a user with **super admin*
 ---
 
 ### ⚠️ **Warnings**
-- **No Maintenance**: This project is no longer actively maintained. Bugs and security issues will not be addressed. (Dependecies will still be updated)
+- **No Maintenance**: This project is no longer actively maintained. Bugs and security issues will not be addressed. (Dependecies will **NOT** be updated)
 - **Database Backups**: Regularly back up your database to prevent data loss.
 - **Security**: Ensure your server is properly secured, especially if exposed to the internet.
 
