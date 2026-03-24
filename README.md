@@ -27,6 +27,7 @@ Special thanks to the **Pterodactyl Project** for their in-depth installation in
 > THIS REPO AND ALL THE CONTENTS INSIDE OF IT ARE OWNED BY BUNKER BRAVO LLC.
 > 
 > This repo **is not a replacment** until V2 is going open-source as most of it is deprecated and/or not maintained.
+>
 > ERRATUM: Apparently, V2's Back AND front end are not going open-source, sooo yeah. 
 
 ---
