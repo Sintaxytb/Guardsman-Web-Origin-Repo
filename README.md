@@ -18,17 +18,26 @@ Special thanks to the **Pterodactyl Project** for their in-depth installation in
 ---
 
 > [!WARNING]
-> The release of Guardsman V2 has made this Guardsman Project **deprecated**, and updates have **ceased**.
+> ### Deprecation Notice & Repository Status
 > 
-> This is just a "fork" of the repo, as the "normal" one has been privatised.
+> With the official release of **Guardsman V2**, this legacy project has been **deprecated**, and active development has **ceased**. 
 > 
-> Thank you for your support to Guardsman
->
-> THIS REPO AND ALL THE CONTENTS INSIDE OF IT ARE OWNED BY BUNKER BRAVO LLC.
+> This repository is a fork of the original codebase, created following the privatization of the primary upstream repository.
 > 
-> This repo **is not a replacment** until V2 is going open-source as most of it is deprecated and/or not maintained.
->
-> ERRATUM: Apparently, V2's Backend and front end are not going open-source, sooo yeah. 
+> ---
+> 
+> #### Intellectual Property
+> All contents within this repository are the property of **Bunker Bravo LLC**.
+> 
+> #### Important Notes & Disclaimers
+> * **Not a Replacement:** This repository does not serve as a functional replacement for Guardsman V2.
+> * **Maintenance:** The codebase is unmaintained and contains deprecated components.
+> * **Source Code Availability:** Neither the frontend nor backend components of Guardsman V2 will be made open-source. As a result, this repository will not receive further feature updates or alignment with V2.
+> 
+> ---
+> 
+> *Thank you to the community for your continued support of the Guardsman project.*
+
 
 ---
 
